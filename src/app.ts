@@ -11,6 +11,7 @@ import { json } from 'body-parser';
 import { UserServiceInterface } from './users/user-service.interface';
 import { IConfigServiceInterface } from './config/config.service.interface';
 import { PrismaService } from './database/prisma.service';
+import { MiddlewareAuth } from './common/auth.middleware';
 
 @injectable()
 export class App {
@@ -32,9 +33,13 @@ export class App {
 		this.userController = userController;
 		this.exeptionFilter = exeptionFilter;
 	}
-	useMiddleware():void{
-		this.app.use(json())
+
+	useMiddleware(): void {
+		this.app.use(json());
+		const authMiddleware = new MiddlewareAuth(this.configService.get('SECRET'));
+		this.app.use(authMiddleware.exec.bind(authMiddleware));
 	}
+
 	useRoutes(): void {
 		this.app.use('/users', this.userController.router);
 	}
@@ -44,10 +49,10 @@ export class App {
 	}
 
 	public async init(): Promise<void> {
-		this.useMiddleware()
+		this.useMiddleware();
 		this.useRoutes();
 		this.useExeptionFilter();
-		await this.prismaService.connect()
+		await this.prismaService.connect();
 		this.server = this.app.listen(this.port);
 		this.logger.log(`Server was started on ${this.port}`);
 	}

@@ -27,7 +27,15 @@ export class UsersService implements UserServiceInterface{
 		return this.usersRepository.create(newUser)
 	}
 
-	async validateUser(dto:UserLoginDto):Promise<boolean>{
-		return true
+	async validateUser({email, password}:UserLoginDto):Promise<boolean>{
+		const existedUser =await this.usersRepository.find(email);
+		if(!existedUser){
+			return false
+		}
+		const newUser= new User(existedUser.email,existedUser.name,existedUser.password)
+		return newUser.comparePassword(password)
+	}
+	async getUserInfo(email:string):Promise<UserModel|null>{
+		return this.usersRepository.find(email)
 	}
 }
