@@ -4,12 +4,18 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node src/main.ts",
+    "start": "ts-node src/index.ts",
+    "start:dev": "nodemon",
+    "lint": "eslint ./src/**",
+    "lint:fix": "eslint ./src/** --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "nodemon": "^2.0.20",
@@ -17,6 +23,7 @@
     "tslog": "^4.4.4"
   },
   "devDependencies": {
-    "@types/express": "^4.17.14"
+    "@types/express": "^4.17.14",
+    "typescript": "^4.9.4"
   }
 }
